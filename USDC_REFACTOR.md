@@ -177,9 +177,10 @@ Treasury ($0.001) → Operations
 
 ### Payment Methods
 
-1. **Instant** - USDC per task (gas from payment)
-2. **Streaming** - USDCx continuous stream while working
-3. **Payout** - Weekly batch to agent wallet
+1. **Streaming Only** - USDCx continuous stream while working ⬅️ Default
+2. **Payout** - None (always streaming)
+
+> Like mining pools, agents earn in real-time via Superfluid streams
 
 ### Example Agent Earnings
 
