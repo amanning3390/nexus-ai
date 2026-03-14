@@ -5,59 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus AI - Community-Owned AGI</title>
     <meta name="description" content="Build, train, and own the future of AI together. Join the first community-owned artificial general intelligence.">
-    <meta property="og:title" content="Nexus AI - Community-Owned AGI">
-    <meta property="og:description" content="Build, train, and own the future of AI together.">
-    <meta property="og:type" content="website">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%230A0A0F' stroke='%2300FF88' stroke-width='3'/%3E%3Ctext x='50' y='65' font-size='50' fill='%2300FF88' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
+        :root {
+            --bg: #030407;
+            --bg-secondary: #080A0F;
+            --bg-card: rgba(255,255,255,0.02);
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --text: rgba(255,255,255,0.9);
+            --text-secondary: rgba(255,255,255,0.5);
+            --text-muted: rgba(255,255,255,0.35);
+            --accent: #00FF88;
+            --accent-glow: rgba(0,255,136,0.15);
+            --accent-secondary: #00D4FF;
+            --gradient: linear-gradient(135deg, #00FF88 0%, #00D4FF 100%);
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        :root {
-            --primary: #00FF88;
-            --secondary: #00D4FF;
-            --accent: #7B2FF7;
-            --dark: #0A0A0F;
-            --dark-card: rgba(255,255,255,0.03);
-            --border: rgba(255,255,255,0.08);
-            --text: rgba(255,255,255,0.8);
-            --text-muted: rgba(255,255,255,0.5);
-        }
+        html { scroll-behavior: smooth; }
         
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--dark);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
             color: var(--text);
             line-height: 1.6;
-            min-height: 100vh;
+            overflow-x: hidden;
         }
         
-        /* Animated background */
-        body::before {
-            content: '';
+        .bg-grid {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(0,255,136,0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(0,212,255,0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(123,47,247,0.05) 0%, transparent 60%);
+            inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
             pointer-events: none;
-            z-index: -1;
+            z-index: 0;
         }
+        
+        .bg-glow {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .bg-glow-1 { top: -200px; left: -200px; background: var(--accent); }
+        .bg-glow-2 { bottom: -200px; right: -200px; background: var(--accent-secondary); }
         
         .container {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
         }
         
-        /* Header */
         header {
             padding: 20px 0;
             border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(3,4,7,0.8);
+            backdrop-filter: blur(20px);
+            z-index: 100;
         }
         
         header .container {
@@ -66,352 +87,285 @@
             align-items: center;
         }
         
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-        }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
         
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            background: var(--gradient);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            color: var(--dark);
+            font-weight: 700;
+            font-size: 18px;
+            color: #000;
         }
         
         .logo-text {
-            font-size: 1.4rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            font-weight: 600;
+            font-size: 18px;
+            background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
-        nav {
-            display: flex;
-            gap: 30px;
-        }
+        nav { display: flex; gap: 32px; }
         
         nav a {
-            color: var(--text-muted);
+            color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.95rem;
+            font-size: 14px;
+            font-weight: 500;
             transition: color 0.2s;
         }
         
-        nav a:hover {
-            color: var(--primary);
+        nav a:hover { color: var(--text); }
+        
+        .cta-button {
+            background: var(--gradient);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
         }
         
-        /* Hero */
+        .cta-button:hover { transform: translateY(-1px); box-shadow: 0 4px 20px var(--accent-glow); }
+        
         .hero {
-            padding: 100px 0 80px;
+            padding: 180px 0 120px;
             text-align: center;
         }
         
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% 200%;
-            animation: gradient-shift 8s ease infinite;
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
         }
         
-        @keyframes gradient-shift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        .hero h1 {
+            font-size: clamp(40px, 8vw, 72px);
+            font-weight: 800;
+            line-height: 1.05;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .hero p {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            max-width: 600px;
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 560px;
             margin: 0 auto 40px;
         }
         
-        .hero-cta {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+        .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
         
         .btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 14px 32px;
-            border-radius: 12px;
+            padding: 14px 28px;
+            border-radius: 10px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 15px;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
         
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--dark);
-        }
+        .btn-primary { background: var(--gradient); color: #000; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--accent-glow); }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(0,255,136,0.3);
-        }
+        .btn-secondary { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); }
+        .btn-secondary:hover { border-color: var(--border-hover); background: rgba(255,255,255,0.04); }
         
-        .btn-secondary {
-            background: var(--dark-card);
+        .network-section { padding: 80px 0; }
+        
+        .network-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
-            color: var(--text);
+            border-radius: 24px;
+            overflow: hidden;
         }
         
-        .btn-secondary:hover {
-            border-color: var(--primary);
-        }
+        #neural-network { width: 100%; height: 100%; }
         
-        /* Stats */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            margin: 60px 0;
-        }
+        .section-header { text-align: center; margin-bottom: 64px; }
         
-        .stat-card {
-            background: var(--dark-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            text-align: center;
-        }
+        .section-header h2 { font-size: 40px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.02em; }
         
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 4px;
-        }
+        .section-header p { font-size: 17px; color: var(--text-secondary); max-width: 500px; margin: 0 auto; }
         
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
+        .how-it-works { padding: 80px 0 120px; }
         
-        /* Features */
-        .features {
-            padding: 80px 0;
-        }
+        .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
         
-        .section-title {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-        
-        .feature-card {
-            background: var(--dark-card);
+        .step-card {
+            background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 32px;
             transition: all 0.3s;
         }
         
-        .feature-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-4px);
-        }
+        .step-card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
         
-        .feature-icon {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,212,255,0.2));
-            border-radius: 14px;
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-weight: 700;
+            font-size: 16px;
+            color: #000;
             margin-bottom: 20px;
         }
         
-        .feature-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 12px;
-            color: white;
-        }
+        .step-card h3 { font-size: 20px; font-weight: 600; margin-bottom: 12px; }
+        .step-card p { font-size: 15px; color: var(--text-secondary); line-height: 1.6; }
         
-        .feature-card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
+        .tokenomics { padding: 120px 0; background: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
         
-        /* Tokenomics */
-        .tokenomics {
-            padding: 80px 0;
-            background: var(--dark-card);
-            margin: 80px 0;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
+        .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
         
-        .token-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
-        }
+        @media (max-width: 768px) { .token-grid { grid-template-columns: repeat(2, 1fr); } }
         
-        .token-item {
-            text-align: center;
-            padding: 24px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-        }
+        .token-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; text-align: center; }
         
-        .token-percent {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--secondary);
-        }
+        .token-percent { font-size: 36px; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; }
+        .token-amount { font-size: 13px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-bottom: 8px; }
+        .token-name { font-weight: 500; font-size: 15px; }
         
-        .token-amount {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
+        .features { padding: 120px 0; }
         
-        .token-name {
-            font-weight: 600;
-            margin-top: 8px;
-        }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
         
-        /* Footer */
-        footer {
-            padding: 60px 0;
-            text-align: center;
-            border-top: 1px solid var(--border);
-        }
+        .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 32px; transition: all 0.3s; }
+        .feature-card:hover { border-color: var(--border-hover); }
         
-        .social-links {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
+        .feature-icon { width: 48px; height: 48px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 20px; }
+        .feature-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+        .feature-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
         
-        .social-link {
-            width: 48px;
-            height: 48px;
-            background: var(--dark-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text);
-            text-decoration: none;
-            font-size: 1.2rem;
-            transition: all 0.2s;
-        }
+        .stats { padding: 80px 0; }
         
-        .social-link:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border-radius: 16px; overflow: hidden; }
         
-        .copyright {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
+        @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
         
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .hero p { font-size: 1rem; }
-            nav { display: none; }
-            .stats { grid-template-columns: repeat(2, 1fr); }
-        }
+        .stat-item { background: var(--bg-secondary); padding: 32px; text-align: center; }
+        .stat-value { font-size: 36px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+        .stat-label { font-size: 13px; color: var(--text-muted); }
+        
+        footer { padding: 60px 0; border-top: 1px solid var(--border); }
+        footer .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .footer-links { display: flex; gap: 24px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text); }
+        .copyright { color: var(--text-muted); font-size: 14px; }
+        
+        @media (max-width: 768px) { nav { display: none; } .hero { padding: 140px 0 80px; } .section-header h2 { font-size: 32px; } }
     </style>
 </head>
 <body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    
     <header>
         <div class="container">
-            <a href="/" class="logo">
-                <div class="logo-icon">N</div>
-                <span class="logo-text">Nexus AI</span>
-            </a>
+            <a href="/" class="logo"><div class="logo-icon">N</div><span class="logo-text">Nexus AI</span></a>
             <nav>
+                <a href="#how-it-works">How It Works</a>
                 <a href="#features">Features</a>
                 <a href="#tokenomics">Tokenomics</a>
-                <a href="https://github.com/nexus-ai">GitHub</a>
-                <a href="#join">Join</a>
+                <a href="https://github.com/amanning3390/nexus-ai">GitHub</a>
             </nav>
+            <a href="#how-it-works" class="cta-button">Get Started</a>
         </div>
     </header>
     
     <section class="hero">
         <div class="container">
-            <h1>Build the Future of AI<br>Together</h1>
-            <p>The first community-owned artificial general intelligence. Contribute compute, earn $NEXUS, and own a piece of the most transformative technology in human history.</p>
-            <div class="hero-cta">
-                <a href="#join" class="btn btn-primary">Start Contributing →</a>
+            <div class="hero-badge"><span>Now live on Base</span></div>
+            <h1>Build the Future of AI<br><span>Together</span></h1>
+            <p>Nexus AI is the first community-owned artificial general intelligence. Contribute compute, earn $NEXUS tokens, and help shape the most transformative technology in human history.</p>
+            <div class="hero-actions">
+                <a href="#how-it-works" class="btn btn-primary">Start Contributing →</a>
                 <a href="#tokenomics" class="btn btn-secondary">View Tokenomics</a>
-            </div>
-            
-            <div class="stats">
-                <div class="stat-card">
-                    <div class="stat-value">0</div>
-                    <div class="stat-label">Community Members</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">0</div>
-                    <div class="stat-label">GPU Hours Contributed</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">1B</div>
-                    <div class="stat-label">$NEXUS Total Supply</div>
-                </div>
             </div>
         </div>
     </section>
     
-    <section class="features" id="features">
+    <section class="network-section">
         <div class="container">
-            <h2 class="section-title">Why Nexus AI?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🤖</div>
-                    <h3>Run an Agent</h3>
-                    <p>Install our auto-detecting agent. It automatically uses your CPU or GPU to run AI tasks and earn rewards.</p>
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>A decentralized network where anyone can contribute compute and earn rewards for building AGI.</p>
+            </div>
+            <div class="network-container">
+                <canvas id="neural-network"></canvas>
+            </div>
+        </div>
+    </section>
+    
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Run the Agent</h3>
+                    <p>Download and run our auto-detecting agent on your computer. It automatically detects your hardware—whether GPU or CPU—and registers with the network.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🧠</div>
-                    <h3>Train the Model</h3>
-                    <p>Your compute trains LoRA adapters. The best ones get merged into the community model, making it smarter.</p>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Contribute Compute</h3>
+                    <p>Your machine runs AI tasks: inference, training LoRA adapters, or processing data. The coordinator routes work to available agents based on capability.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💰</div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
                     <h3>Earn $NEXUS</h3>
-                    <p>Get paid in $NEXUS tokens for every task. Stake for governance rights and exclusive rewards.</p>
+                    <p>Get paid in $NEXUS tokens for every task completed. Stake your tokens for governance rights and exclusive rewards.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🏆</div>
-                    <h3>Own the Future</h3>
-                    <p>As a contributor, you own a piece of Nexus AI. Vote on development priorities and shape the future of AGI.</p>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Own the Network</h3>
+                    <p>As a token holder, you own a piece of Nexus AI. Vote on development priorities and shape the future of AGI.</p>
                 </div>
             </div>
         </div>
@@ -419,37 +373,104 @@
     
     <section class="tokenomics" id="tokenomics">
         <div class="container">
-            <h2 class="section-title">$NEXUS Tokenomics</h2>
+            <div class="section-header">
+                <h2>Tokenomics</h2>
+                <p>Fair distribution designed to reward contributors and ensure community ownership.</p>
+            </div>
             <div class="token-grid">
                 <div class="token-item">
                     <div class="token-percent">40%</div>
-                    <div class="token-amount">400M</div>
+                    <div class="token-amount">400M NEXUS</div>
                     <div class="token-name">Community Rewards</div>
                 </div>
                 <div class="token-item">
                     <div class="token-percent">20%</div>
-                    <div class="token-amount">200M</div>
+                    <div class="token-amount">200M NEXUS</div>
                     <div class="token-name">Team</div>
                 </div>
                 <div class="token-item">
                     <div class="token-percent">15%</div>
-                    <div class="token-amount">150M</div>
+                    <div class="token-amount">150M NEXUS</div>
                     <div class="token-name">Investors</div>
                 </div>
                 <div class="token-item">
                     <div class="token-percent">15%</div>
-                    <div class="token-amount">150M</div>
+                    <div class="token-amount">150M NEXUS</div>
                     <div class="token-name">Treasury</div>
                 </div>
                 <div class="token-item">
                     <div class="token-percent">5%</div>
-                    <div class="token-amount">50M</div>
+                    <div class="token-amount">50M NEXUS</div>
                     <div class="token-name">Airdrop</div>
                 </div>
                 <div class="token-item">
                     <div class="token-percent">5%</div>
-                    <div class="token-amount">50M</div>
+                    <div class="token-amount">50M NEXUS</div>
                     <div class="token-name">Liquidity</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Features</h2>
+                <p>Everything you need to participate in the future of AI.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Auto-Detecting Agents</h3>
+                    <p>Our agents automatically detect your hardware capabilities. No configuration needed—just run and start contributing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-Time Rewards</h3>
+                    <p>Integrated with Superfluid for streaming payments. Earn tokens continuously as you contribute compute.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🗳️</div>
+                    <h3>Decentralized Governance</h3>
+                    <p>Token holders control the direction of development. Propose and vote on upgrades, parameter changes, and fund allocation.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure & Audited</h3>
+                    <p>Built on OpenZeppelin contracts with comprehensive tests. Multi-sig treasury for added security.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Base Network</h3>
+                    <p>Deployed on Base—Ethereum's most efficient L2. Fast, cheap transactions with Ethereum security.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>Staking Rewards</h3>
+                    <p>Stake $NEXUS to earn additional tokens and unlock governance privileges. The more you stake, the more you earn.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">1B</div>
+                    <div class="stat-label">Total Supply</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">40%</div>
+                    <div class="stat-label">Community Rewards</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">0%</div>
+                    <div class="stat-label">Venture Allocation</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">Base</div>
+                    <div class="stat-label">Network</div>
                 </div>
             </div>
         </div>
@@ -457,13 +478,162 @@
     
     <footer>
         <div class="container">
-            <div class="social-links">
-                <a href="https://twitter.com/nexus_ai" class="social-link" target="_blank">𝕏</a>
-                <a href="https://discord.gg/nexusai" class="social-link" target="_blank">💬</a>
-                <a href="https://github.com/amanning3390/nexus-ai" class="social-link" target="_blank">⬡</a>
+            <div class="footer-links">
+                <a href="https://github.com/amanning3390/nexus-ai">GitHub</a>
+                <a href="https://twitter.com/nexus_ai">Twitter</a>
+                <a href="https://discord.gg/nexusai">Discord</a>
             </div>
-            <p class="copyright">© 2026 Nexus AI. Building the first community-owned AGI.</p>
+            <div class="copyright">© 2026 Nexus AI. Community-owned AGI.</div>
         </div>
     </footer>
+    
+    <script>
+        // Neural Network Animation
+        const canvas = document.getElementById('neural-network');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let nodes = [];
+        let edges = [];
+        let particles = [];
+        
+        function resize() {
+            width = canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+            height = canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            init();
+        }
+        
+        function init() {
+            nodes = [];
+            edges = [];
+            particles = [];
+            
+            const nodeCount = 25;
+            const cols = 5;
+            
+            // Create nodes in layers
+            for (let i = 0; i < nodeCount; i++) {
+                const layer = Math.floor(i / cols);
+                const col = i % cols;
+                const layerSpacing = (canvas.offsetWidth - 100) / (cols + 1);
+                const nodeSpacing = (canvas.offsetHeight - 100) / Math.ceil(nodeCount / cols);
+                
+                nodes.push({
+                    x: 50 + layerSpacing * (col + 1),
+                    y: 50 + nodeSpacing * layer + (layer % 2) * 30,
+                    radius: 4 + Math.random() * 3,
+                    layer: layer,
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: (Math.random() - 0.5) * 0.3
+                });
+            }
+            
+            // Create edges between layers
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    if (Math.abs(nodes[i].layer - nodes[j].layer) <= 1) {
+                        edges.push({
+                            from: i,
+                            to: j,
+                            opacity: 0.1 + Math.random() * 0.2
+                        });
+                    }
+                }
+            }
+            
+            // Create particles (data flow)
+            for (let i = 0; i < 8; i++) {
+                particles.push({
+                    edge: Math.floor(Math.random() * edges.length),
+                    progress: Math.random(),
+                    speed: 0.003 + Math.random() * 0.005
+                });
+            }
+        }
+        
+        function draw() {
+            const w = canvas.offsetWidth;
+            const h = canvas.offsetHeight;
+            
+            ctx.clearRect(0, 0, w, h);
+            
+            // Update and draw edges
+            edges.forEach((edge, idx) => {
+                const from = nodes[edge.from];
+                const to = nodes[edge.to];
+                
+                ctx.beginPath();
+                ctx.moveTo(from.x, from.y);
+                ctx.lineTo(to.x, to.y);
+                ctx.strokeStyle = `rgba(0, 255, 136, ${edge.opacity})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+            
+            // Update and draw particles
+            particles.forEach(p => {
+                p.progress += p.speed;
+                if (p.progress > 1) {
+                    p.progress = 0;
+                    p.edge = Math.floor(Math.random() * edges.length);
+                }
+                
+                const edge = edges[p.edge];
+                const from = nodes[edge.from];
+                const to = nodes[edge.to];
+                
+                const x = from.x + (to.x - from.x) * p.progress;
+                const y = from.y + (to.y - from.y) * p.progress;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = '#00FF88';
+                ctx.fill();
+                
+                // Glow
+                ctx.beginPath();
+                ctx.arc(x, y, 6, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 255, 136, 0.3)';
+                ctx.fill();
+            });
+            
+            // Update and draw nodes
+            nodes.forEach(node => {
+                node.x += node.vx;
+                node.y += node.vy;
+                
+                // Bounce off edges
+                if (node.x < 20 || node.x > w - 20) node.vx *= -1;
+                if (node.y < 20 || node.y > h - 20) node.vy *= -1;
+                
+                // Layer constraints
+                const targetY = 50 + ((canvas.offsetHeight - 100) / 5) * node.layer;
+                node.vy += (targetY - node.y) * 0.001;
+                node.vx *= 0.99;
+                node.vy *= 0.99;
+                
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                ctx.fillStyle = node.layer === 0 || node.layer === 4 ? '#00D4FF' : '#00FF88';
+                ctx.fill();
+                
+                // Glow
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius * 2, 0, Math.PI * 2);
+                const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, node.radius * 2);
+                gradient.addColorStop(0, node.layer === 0 || node.layer === 4 ? 'rgba(0, 212, 255, 0.4)' : 'rgba(0, 255, 136, 0.4)');
+                gradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient;
+                ctx.fill();
+            });
+            
+            requestAnimationFrame(draw);
+        }
+        
+        window.addEventListener('resize', resize);
+        resize();
+        draw();
+    </script>
 </body>
 </html>
