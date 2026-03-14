@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Nexus AI</title>
+    <meta name="description" content="Nexus AI technical documentation and API reference.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030407;
+            --bg-secondary: #080A0F;
+            --bg-card: rgba(255,255,255,0.02);
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --text: rgba(255,255,255,0.9);
+            --text-secondary: rgba(255,255,255,0.5);
+            --text-muted: rgba(255,255,255,0.35);
+            --accent: #00FF88;
+            --accent-glow: rgba(0,255,136,0.15);
+            --accent-secondary: #00D4FF;
+            --gradient: linear-gradient(135deg, #00FF88 0%, #00D4FF 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
+        .bg-glow { position: fixed; width: 800px; height: 800px; border-radius: 50%; filter: blur(120px); opacity: 0.3; pointer-events: none; z-index: 0; }
+        .bg-glow-1 { top: -200px; left: -200px; background: var(--accent); }
+        .bg-glow-2 { bottom: -200px; right: -200px; background: var(--accent-secondary); }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+        
+        header { padding: 20px 0; border-bottom: 1px solid var(--border); position: fixed; top: 0; left: 0; right: 0; background: rgba(3,4,7,0.9); backdrop-filter: blur(20px); z-index: 100; }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon { width: 36px; height: 36px; background: var(--gradient); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #000; }
+        .logo-text { font-weight: 600; font-size: 18px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        nav { display: flex; gap: 32px; }
+        nav a { color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+        nav a:hover, nav a.active { color: var(--text); }
+        .cta-button { background: var(--gradient); color: #000; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; }
+        
+        .hero { padding: 160px 0 60px; }
+        .hero h1 { font-size: 48px; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.02em; }
+        .hero h1 span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 18px; color: var(--text-secondary); }
+        
+        .section { padding: 40px 0; }
+        
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 24px; }
+        .card h2 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+        .card h3 { font-size: 18px; font-weight: 600; margin: 20px 0 12px; }
+        .card p { font-size: 15px; color: var(--text-secondary); margin-bottom: 12px; }
+        
+        .code { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); overflow-x: auto; margin: 12px 0; }
+        .code .comment { color: var(--text-muted); }
+        .code .keyword { color: var(--accent-secondary); }
+        .code .string { color: var(--accent); }
+        
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--border); }
+        th { color: var(--text-muted); font-weight: 500; font-size: 13px; }
+        td { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+        
+        .address { background: var(--bg-secondary); padding: 8px 12px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; word-break: break-all; }
+        
+        footer { padding: 40px 0; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 14px; }
+        
+        @media (max-width: 768px) { nav { display: none; } .hero h1 { font-size: 36px; } }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo"><div class="logo-icon">N</div><span class="logo-text">Nexus AI</span></a>
+            <nav>
+                <a href="how-it-works.html">How It Works</a>
+                <a href="download.html">Download</a>
+                <a href="docs.html" class="active">Docs</a>
+                <a href="about.html">About</a>
+            </nav>
+            <a href="download.html" class="cta-button">Get Started</a>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Technical <span>Docs</span></h1>
+            <p>Smart contracts, API reference, and integration guides.</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <div class="card">
+                <h2>Smart Contracts</h2>
+                <p>All contracts are deployed on Base mainnet.</p>
+                
+                <h3>NexusToken (NEXUS)</h3>
+                <div class="address">0x289383F655940B800E82749863DC4bE925CbddD4</div>
+                <p>ERC-20 token with vesting capabilities.</p>
+                <div class="code"><span class="keyword">pragma</span> solidity ^0.8.20;
+<span class="keyword">import</span> <span class="string">"@openzeppelin/contracts/token/ERC20/ERC20.sol"</span>;
+
+<span class="keyword">contract</span> NexusToken <span class="keyword">is</span> ERC20 {
+    <span class="comment">// Total supply: 1B tokens</span>
+    <span class="keyword">uint256</span> <span class="keyword">public</span> <span class="keyword">constant</span> MAX_SUPPLY = 1_000_000_000 * 1e18;
+}</div>
+                
+                <h3>NexusStaking</h3>
+                <div class="address">0x7bA505C8E740D1DFA0dfda900434055CF966d8E9</div>
+                <p>Staking contract for earning rewards and governance voting power.</p>
+                
+                <h3>Coming Soon</h3>
+                <ul style="margin-left: 20px; color: var(--text-secondary);">
+                    <li>NexusGovernor - On-chain governance</li>
+                    <li>NexusFaucet - Testnet token distribution</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h2>Coordinator API</h2>
+                <p>The coordinator routes tasks to agents and tracks rewards.</p>
+                
+                <h3>Base URL</h3>
+                <div class="code">https://api.nexus-ai.io</div>
+                <p>Or run locally at <code>http://localhost:8000</code></p>
+                
+                <h3>Endpoints</h3>
+                <table>
+                    <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                    <tr><td>POST</td><td>/register</td><td>Register new agent</td></tr>
+                    <tr><td>POST</td><td>/heartbeat</td><td>Agent heartbeat</td></tr>
+                    <tr><td>GET</td><td>/agents</td><td>List all agents</td></tr>
+                    <tr><td>POST</td><td>/task</td><td>Submit new task</td></tr>
+                    <tr><td>GET</td><td>/task/{id}</td><td>Get task status</td></tr>
+                    <tr><td>GET</td><td>/rewards/{wallet}</td><td>Get wallet rewards</td></tr>
+                </table>
+                
+                <h3>Register Agent</h3>
+                <div class="code">POST /register
+{
+  <span class="string">"id"</span>: <span class="string">"agent-001"</span>,
+  <span class="string">"wallet_address"</span>: <span class="string">"0x..."</span>,
+  <span class="string">"cpu_cores"</span>: 8,
+  <span class="string">"memory_gb"</span>: 16,
+  <span class="string">"gpu_info"</span>: {
+    <span class="string">"name"</span>: <span class="string">"NVIDIA RTX 3080"</span>,
+    <span class="string">"memory_gb"</span>: 10
+  }
+}</div>
+                
+                <h3>Submit Task</h3>
+                <div class="code">POST /task
+{
+  <span class="string">"task_type"</span>: <span class="string">"inference"</span>,
+  <span class="string">"input_data"</span>: {
+    <span class="string">"prompt"</span>: <span class="string">"What is 2+2?"</span>,
+    <span class="string">"model"</span>: <span class="string">"qwen2.5-2b"</span>
+  },
+  <span class="string">"priority"</span>: 1
+}</div>
+            </div>
+            
+            <div class="card">
+                <h2>Tokenomics</h2>
+                
+                <h3>Supply Distribution</h3>
+                <table>
+                    <tr><th>Allocation</th><th>Amount</th><th>%</th></tr>
+                    <tr><td>Community Rewards</td><td>400M</td><td>40%</td></tr>
+                    <tr><td>Team</td><td>200M</td><td>20%</td></tr>
+                    <tr><td>Investors</td><td>150M</td><td>15%</td></tr>
+                    <tr><td>Treasury</td><td>150M</td><td>15%</td></tr>
+                    <tr><td>Airdrop</td><td>50M</td><td>5%</td></tr>
+                    <tr><td>Liquidity</td><td>50M</td><td>5%</td></tr>
+                </table>
+                
+                <h3>Vesting Schedules</h3>
+                <table>
+                    <tr><th>Category</th><th>Cliff</th><th>Duration</th></tr>
+                    <tr><td>Team</td><td>1 year</td><td>4 years</td></tr>
+                    <tr><td>Investors</td><td>6 months</td><td>2 years</td></tr>
+                    <tr><td>Treasury</td><td>None</td><td>3 years</td></tr>
+                </table>
+            </div>
+            
+            <div class="card">
+                <h2>Network Details</h2>
+                
+                <h3>Base Mainnet</h3>
+                <table>
+                    <tr><th>Parameter</th><th>Value</th></tr>
+                    <tr><td>Chain ID</td><td>8453</td></tr>
+                    <tr><td>Explorer</td><td>basescan.org</td></tr>
+                    <tr><td>RPC</td><td>mainnet.base.org</td></tr>
+                </table>
+                
+                <h3>Base Sepolia (Testnet)</h3>
+                <table>
+                    <tr><th>Parameter</th><th>Value</th></tr>
+                    <tr><td>Chain ID</td><td>84532</td></tr>
+                    <tr><td>Explorer</td><td>sepolia.basescan.org</td></tr>
+                    <tr><td>RPC</td><td>sepolia.base.org</td></tr>
+                </table>
+            </div>
+            
+            <div class="card">
+                <h2>Resources</h2>
+                
+                <h3>GitHub</h3>
+                <p><a href="https://github.com/amanning3390/nexus-ai" style="color: var(--accent);">github.com/amanning3390/nexus-ai</a></p>
+                
+                <h3>Contracts</h3>
+                <p>Verified on Basescan:<br><a href="https://basescan.org/address/0x289383F655940B800E82749863DC4bE925CbddD4" style="color: var(--accent);">NexusToken</a></p>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p>© 2026 Nexus AI. Community-owned AGI.</p>
+        </div>
+    </footer>
+</body>
+</html>

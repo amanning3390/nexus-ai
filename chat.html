@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus AI - Personal Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030407;
+            --bg-secondary: #080A0F;
+            --bg-card: rgba(255,255,255,0.02);
+            --border: rgba(255,255,255,0.06);
+            --text: rgba(255,255,255,0.9);
+            --text-secondary: rgba(255,255,255,0.5);
+            --accent: #00FF88;
+            --accent-glow: rgba(0,255,136,0.15);
+            --gradient: linear-gradient(135deg, #00FF88 0%, #00D4FF 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; }
+        
+        header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon { width: 32px; height: 32px; background: var(--gradient); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; font-size: 16px; }
+        .logo-text { font-weight: 600; font-size: 16px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .connect-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+        .connect-btn:hover { border-color: var(--accent); }
+        
+        .chat-container { flex: 1; display: flex; flex-direction: column; max-width: 800px; margin: 0 auto; width: 100%; padding: 20px; }
+        
+        .messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding-bottom: 20px; }
+        
+        .message { display: flex; gap: 12px; max-width: 90%; }
+        .message.user { align-self: flex-end; flex-direction: row-reverse; }
+        .message-avatar { width: 32px; height: 32px; background: var(--bg-card); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+        .message.user .message-avatar { background: var(--gradient); color: #000; }
+        .message-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; font-size: 14px; line-height: 1.5; }
+        .message.user .message-content { background: rgba(0,255,136,0.1); border-color: rgba(0,255,136,0.2); }
+        
+        .typing { color: var(--text-secondary); font-style: italic; }
+        
+        .input-area { display: flex; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .input-area input { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; color: var(--text); font-size: 14px; outline: none; }
+        .input-area input:focus { border-color: var(--accent); }
+        .input-area button { background: var(--gradient); color: #000; border: none; padding: 14px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; }
+        .input-area button:hover { transform: translateY(-1px); }
+        .input-area button:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .sidebar { width: 280px; background: var(--bg-secondary); border-left: 1px solid var(--border); padding: 20px; display: none; }
+        @media (min-width: 1024px) { .sidebar { display: block; } }
+        
+        .sidebar h3 { font-size: 13px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+        .sidebar-item { padding: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; font-size: 13px; }
+        
+        .main-layout { display: flex; flex: 1; }
+        
+        .welcome { text-align: center; padding: 60px 20px; }
+        .welcome h1 { font-size: 28px; margin-bottom: 12px; }
+        .welcome h1 span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .welcome p { color: var(--text-secondary); max-width: 400px; margin: 0 auto 24px; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="logo"><div class="logo-icon">N</div><span class="logo-text">Nexus AI</span></a>
+        <button class="connect-btn" id="connectBtn">Connect Wallet</button>
+    </header>
+    
+    <div class="main-layout">
+        <div class="chat-container">
+            <div class="messages" id="messages">
+                <div class="welcome">
+                    <h1>Hello, I'm <span>Nexus</span></h1>
+                    <p>Your personal AI assistant. Ask me anything.</p>
+                    <button onclick="startChat()" style="background: var(--gradient); color: #000; border: none; padding: 14px 32px; border-radius: 10px; font-weight: 600; cursor: pointer;">Start Chatting</button>
+                </div>
+            </div>
+            <div class="input-area" id="inputArea" style="display: none;">
+                <input type="text" id="userInput" placeholder="Message Nexus..." onkeypress="if(event.key==='Enter')sendMessage()">
+                <button onclick="sendMessage()" id="sendBtn">Send</button>
+            </div>
+        </div>
+        
+        <div class="sidebar">
+            <h3>Model</h3>
+            <div class="sidebar-item">Qwen2.5-2B</div>
+            <h3 style="margin-top: 20px;">Stats</h3>
+            <div class="sidebar-item">Network: <span style="color: var(--accent);">Online</span></div>
+            <div class="sidebar-item">Compute: <span id="computeStatus">Decentralized</span></div>
+            <div class="sidebar-item">$NEXUS: <span id="tokenBalance">0</span></div>
+        </div>
+    </div>
+    
+    <script>
+        let chatStarted = false;
+        
+        function startChat() {
+            chatStarted = true;
+            document.getElementById('messages').innerHTML = `
+                <div class="message">
+                    <div class="message-avatar">N</div>
+                    <div class="message-content">Hello! I'm Nexus, your personal AI assistant. I run on decentralized compute and learn from our conversations. How can I help you today?</div>
+                </div>
+            `;
+            document.getElementById('inputArea').style.display = 'flex';
+            document.getElementById('userInput').focus();
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Show typing
+            showTyping();
+            
+            // Simulate response (in MVP, this calls the coordinator API)
+            const response = await getAIResponse(message);
+            
+            hideTyping();
+            addMessage(response, 'assistant');
+        }
+        
+        function addMessage(text, role) {
+            const messages = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = `message ${role}`;
+            div.innerHTML = `
+                <div class="message-avatar">${role === 'user' ? 'Y' : 'N'}</div>
+                <div class="message-content">${text}</div>
+            `;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+        
+        function showTyping() {
+            const messages = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = 'message';
+            div.id = 'typing';
+            div.innerHTML = `
+                <div class="message-avatar">N</div>
+                <div class="message-content typing">Thinking...</div>
+            `;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+        
+        function hideTyping() {
+            const typing = document.getElementById('typing');
+            if (typing) typing.remove();
+        }
+        
+        // Simple AI response (MVP - replace with real API call)
+        async function getAIResponse(prompt) {
+            // In production, this calls the coordinator → agent network
+            // For MVP demo, we use a simple rule-based response
+            
+            const lower = prompt.toLowerCase();
+            
+            if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
+                return "Hello! I'm Nexus. I'm here to help with any questions you have. What would you like to know?";
+            }
+            
+            if (lower.includes('who are you') || lower.includes('what are you')) {
+                return "I'm Nexus AI, a community-owned personal assistant. I run on decentralized compute provided by people like you. I learn continuously from our conversations. Unlike corporate AI, I'm owned by the community through $NEXUS tokens.";
+            }
+            
+            if (lower.includes('decentralized') || lower.includes('how do you work')) {
+                return "I run on a network of computers contributed by community members. When you ask me a question, it goes to the coordinator which routes it to an available agent. The agent processes your request and you get an answer - all powered by decentralized compute, not a central server.";
+            }
+            
+            if (lower.includes('token') || lower.includes('nexus') || lower.includes('cryptocurrency')) {
+                return "$NEXUS is the token that powers the network. Contributors earn $NEXUS for providing compute. Token holders have governance rights - you decide the direction of the AI. It's community ownership, not corporate control.";
+            }
+            
+            if (lower.includes('legal') || lower.includes('law')) {
+                return "I was built with legal compliance as a hard requirement. I won't assist with: child exploitation, terrorism, fraud, violence, illegal drugs, or hacking. For sensitive topics like medical/legal advice, I'll provide information but always with appropriate disclaimers.";
+            }
+            
+            if (lower.includes('censorship') || lower.includes('uncensored')) {
+                return "I only have hard blocks on illegal activities. Beyond that, I aim to be helpful and provide balanced information. I'm not here to push any political agenda - just to be the best assistant I can be.";
+            }
+            
+            // Default response
+            return "That's an interesting question! I'm continuously learning, and this is our early version. In production, I'd connect to the full agent network. What other questions do you have?";
+        }
+        
+        // Wallet connection (MVP)
+        document.getElementById('connectBtn').addEventListener('click', () => {
+            alert('Wallet connection coming soon! For now, chat is free.');
+        });
+    </script>
+</body>
+</html>
