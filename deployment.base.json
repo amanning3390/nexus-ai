@@ -1,6 +1,6 @@
 {
   "network": "base",
   "tokenAddress": "0x289383F655940B800E82749863DC4bE925CbddD4",
-  "stakingAddress": "0x7bA505C8E740D1DFA0dfda900434055CF966d8E9",
-  "timestamp": "2026-03-14T03:42:16.075Z"
+  "faucetAddress": "0x3B686c84D35E617b65760c029183e63e9Ad14014",
+  "timestamp": "2026-03-14T04:12:31.773Z"
 }
