@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  coordinator:
+    build: 
+      context: ./coordinator
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_PATH=/data/nexus_coordinator.db
+      - PORT=8000
+    volumes:
+      - coordinator_data:/data
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=nexus
+      - POSTGRES_PASSWORD=nexus
+      - POSTGRES_DB=nexus
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  coordinator_data:
+  postgres_data:
+  redis_data:
