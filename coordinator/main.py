@@ -175,6 +175,65 @@ async def get_agent(agent_id: str):
         "last_seen": a[8]
     }
 
+# ============== AGENT TASK POLLING ==============
+
+@app.get("/tasks/{agent_id}")
+async def get_agent_task(agent_id: str):
+    """Agent polls for available tasks"""
+    c = conn.cursor()
+    
+    # Check if agent exists
+    c.execute('SELECT id, status FROM agents WHERE id = ?', (agent_id,))
+    agent = c.fetchone()
+    
+    if not agent:
+        return {"task": None, "message": "Agent not registered"}
+    
+    # Get pending task assigned to this agent
+    c.execute('''SELECT id, task_type, input_data, reward, created_at 
+                 FROM tasks 
+                 WHERE agent_id = ? AND status = 'pending'
+                 ORDER BY created_at ASC LIMIT 1''', (agent_id,))
+    task = c.fetchone()
+    
+    if not agent:
+        return {"task": None}
+    
+    return {
+        "task": {
+            "id": task[0],
+            "task_type": task[1],
+            "payload": json.loads(task[2]) if task[2] else {},
+            "reward": task[3],
+            "created_at": task[4]
+        } if task else None
+    }
+
+@app.post("/result")
+async def submit_result(payload: dict):
+    """Agent submits task result"""
+    task_id = payload.get("task_id")
+    agent_id = payload.get("agent_id")
+    result = payload.get("result")
+    
+    c = conn.cursor()
+    ts = int(time.time())
+    
+    # Update task
+    c.execute('''UPDATE tasks 
+                 SET status = 'completed', output_data = ?, completed_at = ?
+                 WHERE id = ?''',
+               (json.dumps(result), ts, task_id))
+    
+    # Update agent stats
+    c.execute('''UPDATE agents 
+                 SET total_tasks = total_tasks + 1
+                 WHERE id = ?''', (agent_id,))
+    
+    conn.commit()
+    
+    return {"status": "completed", "task_id": task_id}
+
 # ============== TASK ENDPOINTS ==============
 
 @app.post("/task")
