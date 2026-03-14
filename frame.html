@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus AI - Chat</title>
+    <meta name="fc-frame-category" content="webhook">
+    <meta name="fc-frame-post-url" content="https://nexus-ai.vercel.app/api/frame">
+    <meta property="og:image" content="https://nexus-ai.vercel.app/og.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0A0A0F;
+            --bg-secondary: #12121A;
+            --text: #FFFFFF;
+            --text-secondary: #A0A0B0;
+            --accent: #00FF88;
+            --accent-glow: rgba(0,255,136,0.2);
+            --border: rgba(255,255,255,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Mini App / Frame Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo { width: 32px; height: 32px; background: linear-gradient(135deg, #00FF88, #00D4FF); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; }
+        .title { font-weight: 600; font-size: 16px; }
+        
+        .container { flex: 1; display: flex; flex-direction: column; max-width: 600px; margin: 0 auto; width: 100%; padding: 16px; }
+        
+        /* Wallet Connect */
+        .connect-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .connect-btn {
+            background: linear-gradient(135deg, #0052FF, #0066FF);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Chat */
+        .chat { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-bottom: 80px; }
+        
+        .message { max-width: 85%; }
+        .message.user { align-self: flex-end; }
+        .message.assistant { align-self: flex-start; }
+        
+        .bubble {
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .message.user .bubble {
+            background: #0052FF;
+            border-bottom-right-radius: 4px;
+        }
+        .message.assistant .bubble {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+        }
+        
+        .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .avatar.ai { background: linear-gradient(135deg, #00FF88, #00D4FF); color: #000; }
+        .avatar.user { background: #0052FF; }
+        
+        /* Input */
+        .input-area {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 12px 16px;
+            display: flex;
+            gap: 8px;
+        }
+        .input-area input {
+            flex: 1;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+        }
+        .input-area input:focus { border-color: var(--accent); }
+        .input-area button {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* Staking */
+        .stake-banner {
+            background: linear-gradient(135deg, rgba(0,255,136,0.1), rgba(0,212,255,0.1));
+            border: 1px solid rgba(0,255,136,0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .stake-banner h3 { font-size: 14px; margin-bottom: 8px; }
+        .stake-banner p { font-size: 12px; color: var(--text-secondary); }
+        
+        /* Loading */
+        .typing { color: var(--text-secondary); font-size: 13px; padding: 8px 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">N</div>
+        <span class="title">Nexus AI</span>
+    </div>
+    
+    <div class="container">
+        <div class="stake-banner">
+            <h3>🎯 Stake $NEXUS for Free Chat</h3>
+            <p>Stakers get 50% off and governance rights.</p>
+        </div>
+        
+        <div id="chat" class="chat">
+            <div class="message assistant">
+                <div class="avatar ai">N</div>
+                <div class="bubble">Hello! I'm Nexus AI. Connect your wallet to start chatting, or use the demo below.</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="input-area">
+        <input type="text" id="message" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendMessage()">
+        <button onclick="sendMessage()">→</button>
+    </div>
+    
+    <script>
+        let connected = false;
+        
+        async function connect() {
+            // Check for Frame (Farcaster) context
+            const frameData = await window.framesData;
+            if (frameData && frameData.fid) {
+                // Connected via Frame
+                connected = true;
+                showConnected(frameData.fid);
+                return;
+            }
+            
+            // Try to detect wallet
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    if (accounts.length > 0) {
+                        connected = true;
+                        showConnected(accounts[0].slice(0,6) + '...');
+                    }
+                } catch (e) {
+                    console.log('Wallet not connected, using demo');
+                }
+            }
+        }
+        
+        function showConnected(addr) {
+            document.querySelector('.stake-banner').innerHTML = `
+                <h3>✅ Connected: ${addr}</h3>
+                <p>Balance: <span id="balance">0 $NEXUS</span></p>
+            `;
+            loadBalance(addr);
+        }
+        
+        async function loadBalance(addr) {
+            try {
+                const res = await fetch('/api/user/' + addr);
+                const data = await res.json();
+                document.getElementById('balance').textContent = data.staked + ' $NEXUS';
+            } catch (e) {}
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('message');
+            const msg = input.value.trim();
+            if (!msg) return;
+            
+            // Add user message
+            addMessage(msg, 'user');
+            input.value = '';
+            
+            // Show typing
+            showTyping();
+            
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+                
+                hideTyping();
+                
+                if (res.status === 402) {
+                    // Payment required
+                    const data = await res.json();
+                    addMessage('⚠️ ' + data.payment.description + '. Demo: free!', 'assistant');
+                } else {
+                    const data = await res.json();
+                    addMessage(data.reply, 'assistant');
+                }
+            } catch (e) {
+                hideTyping();
+                addMessage('Demo: ' + msg.slice(0,20) + '...', 'assistant');
+            }
+        }
+        
+        function addMessage(text, role) {
+            const chat = document.getElementById('chat');
+            const div = document.createElement('div');
+            div.className = 'message ' + role;
+            div.innerHTML = `
+                <div class="avatar ${role === 'user' ? 'user' : 'ai'}">${role === 'user' ? 'Y' : 'N'}</div>
+                <div class="bubble">${text}</div>
+            `;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+        
+        function showTyping() {
+            const chat = document.getElementById('chat');
+            const div = document.createElement('div');
+            div.id = 'typing';
+            div.className = 'message assistant';
+            div.innerHTML = '<div class="typing">Thinking...</div>';
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+        
+        function hideTyping() {
+            const t = document.getElementById('typing');
+            if (t) t.remove();
+        }
+        
+        // Check for frame context
+        if (window.location.href.includes('frame')) {
+            connect();
+        }
+    </script>
+</body>
+</html>
