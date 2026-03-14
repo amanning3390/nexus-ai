@@ -141,6 +141,59 @@ Treasury gets (10% USDC)
 
 ---
 
+## Compute/Mining Rewards
+
+### Paying GPU Providers (The "Miners")
+
+Like Bitcoin miners get paid for compute, Nexus AI pays agents for running inference.
+
+### Revenue Split
+
+| Source | Amount | Distribution |
+|--------|--------|--------------|
+| **Chat payments** | $0.005/msg | 90% agent, 10% treasury |
+| **API calls** | $0.01/call | 90% agent, 10% treasury |
+| **Training** | $0.10/hour | 90% agent, 10% treasury |
+
+### Agent Earnings (USDC)
+
+| Hardware | Tasks/Hour | Earnings/Day |
+|----------|------------|--------------|
+| CPU (8 cores) | 100 | $0.50 |
+| GPU (RTX 3080) | 500 | $2.50 |
+| GPU (RTX 4090) | 1000 | $5.00 |
+
+### How It Works
+
+```
+User pays $0.01
+    ↓
+Gas ($0.003) → Paymaster
+    ↓
+Agent ($0.006) → Agent wallet (USDC)
+    ↓
+Treasury ($0.001) → Operations
+```
+
+### Payment Methods
+
+1. **Instant** - USDC per task (gas from payment)
+2. **Streaming** - USDCx continuous stream while working
+3. **Payout** - Weekly batch to agent wallet
+
+### Example Agent Earnings
+
+```solidity
+// Agent earns per task
+uint256 reward = (msg.value * 90) / 100;  // 90% to agent
+agent.transfer(reward);
+
+// Or stream continuously via Superfluid
+superfluid.createFlow(USDCx, agent, flowRate);
+```
+
+---
+
 ## Base Paymaster Integration
 
 ```javascript
