@@ -17,6 +17,23 @@
 
 ---
 
+## Gas Considerations
+
+### Base Gas Costs
+| Operation | Gas (avg) | Cost (USDC) |
+|----------|-----------|-------------|
+| Simple transfer | ~21K | $0.001 |
+| Contract call | ~50K | $0.003 |
+| ERC-20 transfer | ~65K | $0.004 |
+
+### Base Paymaster
+- Users don't need native ETH for gas
+- Gas sponsored by Paymaster
+- Fee comes from payment amount
+- Minimum payment must cover gas + margin
+
+---
+
 ## Current Architecture (Needs Change)
 
 ```
@@ -84,19 +101,66 @@
 ```
 User (USDC Wallet)
     ↓
-Base Pay ($0.001 USDC)
+Base Pay + Paymaster (sponsor gas)
     ↓
-Nexus API (verify payment)
+Pay $0.005 (min covers gas + compute)
     ↓
 Coordinator → Agent
     ↓
 Agent runs inference
     ↓
-Return response
-    ↓
 Agent gets paid (90% USDC)
 Treasury gets (10% USDC)
 ```
+
+---
+
+## Pricing with Gas
+
+### Minimum Prices (Must Cover Gas)
+| Operation | Gas Cost | Min Price |
+|-----------|----------|-----------|
+| Chat message | $0.003 | $0.005 |
+| Priority message | $0.003 | $0.01 |
+| API call | $0.004 | $0.01 |
+
+### Subscription Plans (Token Allowances)
+
+| Plan | Price | Allowance | Per-Message |
+|------|-------|-----------|-------------|
+| **Free** | $0 | 10/day | $0 (rate limited) |
+| **Basic** | $10/mo | 10,000 msgs | $0.001 |
+| **Pro** | $50/mo | 100,000 msgs | $0.002 |
+| **Enterprise** | $500/mo | Unlimited | $0.001 |
+
+### Token Allowances
+- Plans include USDC allowance (not $NEXUS)
+- Prepay for compute ahead of time
+- Auto-deduct from balance
+- Never pay per-request gas
+
+---
+
+## Base Paymaster Integration
+
+```javascript
+// Paymaster sponsors gas for users
+const result = await pay({
+  amount: '10.00',  // $10 USDC
+  to: treasuryAddress,
+  paymaster: 'nexus-paymaster',  // Our paymaster
+  sponsorship: {
+    enabled: true,
+    limits: ['chat', 'api']
+  }
+});
+```
+
+### How Paymaster Works
+1. User pays USDC to treasury
+2. Treasury covers gas via Paymaster
+3. Net = Payment - Gas = Profit
+4. Agent still gets 90% of payment
 
 ---
 
