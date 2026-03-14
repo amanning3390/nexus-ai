@@ -1,0 +1,95 @@
+name: Deploy Contracts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'contracts/**'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: contracts/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: contracts
+        run: npm ci
+      
+      - name: Compile contracts
+        working-directory: contracts
+        run: npm run compile
+      
+      - name: Run tests
+        working-directory: contracts
+        run: npm run test
+
+  deploy-testnet:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: testnet
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        working-directory: contracts
+        run: npm ci
+      
+      - name: Deploy to Base Sepolia
+        working-directory: contracts
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          BASE_SEPOLIA_URL: ${{ secrets.BASE_SEPOLIA_URL }}
+          BASESCAN_API_KEY: ${{ secrets.BASESCAN_API_KEY }}
+        run: npm run deploy:sepolia
+      
+      - name: Upload deployment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-testnet
+          path: contracts/deployment.*.json
+
+  deploy-mainnet:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    environment: mainnet
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        working-directory: contracts
+        run: npm ci
+      
+      - name: Deploy to Base Mainnet
+        working-directory: contracts
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          BASE_MAINNET_URL: ${{ secrets.BASE_MAINNET_URL }}
+          BASESCAN_API_KEY: ${{ secrets.BASESCAN_API_KEY }}
+        run: npm run deploy:mainnet
+      
+      - name: Upload deployment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-mainnet
+          path: contracts/deployment.*.json
